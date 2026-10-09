@@ -1,0 +1,473 @@
+<title>Ziak United Outreach</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a matchday-style fixture sheet. Navy band with the tally, then one block per outreach week, one row per brand. Colors follow the Ziak United media kit. */
+:root {
+  --bg: #F4EDE4;
+  --surface: #FFFDF9;
+  --ink: #121212;
+  --muted: #5E574E;
+  --line: #DED5C7;
+  --band: #14213D;
+  --band-ink: #FFFFFF;
+  --band-muted: #C9D2E0;
+  --gold: #D4A017;
+  --accent: #C4362D;
+  --focus: #00666D;
+  --s-todo-bg: #ECE5DA; --s-todo-fg: #4F4940;
+  --s-sent-bg: #DCE3F0; --s-sent-fg: #14213D;
+  --s-follow-bg: #F6E7B8; --s-follow-fg: #5C4300;
+  --s-reply-bg: #CDEDEF; --s-reply-fg: #00484D;
+  --s-deal-bg: #D3EDD7; --s-deal-fg: #1B5426;
+  --s-no-bg: #F3D9D6; --s-no-fg: #7E241D;
+  --due-bg: #C4362D; --due-fg: #FFFFFF;
+  --font: 'Anuphan', 'Noto Sans Thai', 'Leelawadee UI', Tahoma, system-ui, sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1322; --surface: #161F33; --ink: #EDE7DE; --muted: #A9A296; --line: #2A3550;
+    --band: #1B2847; --band-ink: #FFFFFF; --band-muted: #B9C3D4; --gold: #E2B33A; --accent: #FF7A70; --focus: #5FC9CF;
+    --s-todo-bg: #262E40; --s-todo-fg: #C9C2B6;
+    --s-sent-bg: #24345A; --s-sent-fg: #D3DDF2;
+    --s-follow-bg: #4A3A0E; --s-follow-fg: #F6DE95;
+    --s-reply-bg: #0F4448; --s-reply-fg: #B5ECEF;
+    --s-deal-bg: #17452A; --s-deal-fg: #BDEBC6;
+    --s-no-bg: #4D2220; --s-no-fg: #F7C4BF;
+    --due-bg: #FF7A70; --due-fg: #1A0B09;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1322; --surface: #161F33; --ink: #EDE7DE; --muted: #A9A296; --line: #2A3550;
+  --band: #1B2847; --band-ink: #FFFFFF; --band-muted: #B9C3D4; --gold: #E2B33A; --accent: #FF7A70; --focus: #5FC9CF;
+  --s-todo-bg: #262E40; --s-todo-fg: #C9C2B6;
+  --s-sent-bg: #24345A; --s-sent-fg: #D3DDF2;
+  --s-follow-bg: #4A3A0E; --s-follow-fg: #F6DE95;
+  --s-reply-bg: #0F4448; --s-reply-fg: #B5ECEF;
+  --s-deal-bg: #17452A; --s-deal-fg: #BDEBC6;
+  --s-no-bg: #4D2220; --s-no-fg: #F7C4BF;
+  --due-bg: #FF7A70; --due-fg: #1A0B09;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Band */
+.band { background: var(--band); color: var(--band-ink); padding-block: 24px 20px; }
+.band .wrap { display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--gold); }
+.band h1 { margin: 0; font-size: clamp(26px, 5vw, 36px); line-height: 1.1; letter-spacing: -0.3px; text-wrap: balance; }
+.band p { margin: 0; color: var(--band-muted); max-width: 62ch; font-size: 14px; }
+.band a { color: var(--gold); }
+.tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.tally div { display: flex; flex-direction: column; border-top: 2px solid var(--gold); padding-top: 8px; min-width: 0; }
+.tally b { font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.tally span { font-size: 12px; color: var(--band-muted); }
+.tally .hot b { color: var(--gold); }
+
+/* Toolbar */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-block: 16px 4px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--band); color: var(--band-ink); border-color: var(--band); }
+.chip .n { font-variant-numeric: tabular-nums; opacity: .75; margin-left: 4px; }
+.note { font-size: 13px; color: var(--muted); padding-block: 4px 0; max-width: 75ch; }
+
+/* Weeks */
+.week { padding-block: 18px 6px; display: flex; flex-direction: column; gap: 8px; }
+.week-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+.week-head h2 { margin: 0; font-size: 18px; text-wrap: balance; }
+.week-head span { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.row { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.7fr) 190px 150px minmax(0, 1fr) auto; gap: 10px 14px; align-items: center; }
+.row.is-due { border-color: var(--accent); }
+.who { display: flex; gap: 10px; align-items: baseline; min-width: 0; }
+.num { font-size: 13px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 1.6em; }
+.who h3 { margin: 0; font-size: 16px; line-height: 1.25; overflow-wrap: anywhere; }
+.who p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+.contact { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.contact code { font-family: var(--mono); font-size: 12.5px; overflow-wrap: anywhere; min-width: 0; }
+.icon-btn { flex-shrink: 0; border: 1px solid var(--line); background: transparent; border-radius: 6px; width: 34px; height: 34px; display: inline-grid; place-items: center; cursor: pointer; color: var(--muted); }
+.icon-btn:hover { color: var(--ink); border-color: var(--muted); }
+.icon-btn svg { width: 16px; height: 16px; }
+.field { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.field > span { font-size: 11px; color: var(--muted); }
+select.status { appearance: none; border: 0; border-radius: 999px; padding: 8px 30px 8px 12px; min-height: 38px; font-size: 13.5px; font-weight: 600; cursor: pointer; width: 100%; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px; background-repeat: no-repeat; }
+.st-todo, .st-silent { background-color: var(--s-todo-bg); color: var(--s-todo-fg); }
+.st-sent { background-color: var(--s-sent-bg); color: var(--s-sent-fg); }
+.st-followed { background-color: var(--s-follow-bg); color: var(--s-follow-fg); }
+.st-replied { background-color: var(--s-reply-bg); color: var(--s-reply-fg); }
+.st-deal { background-color: var(--s-deal-bg); color: var(--s-deal-fg); }
+.st-declined { background-color: var(--s-no-bg); color: var(--s-no-fg); }
+select.status option { background: var(--surface); color: var(--ink); }
+input[type="date"], input[type="text"], textarea, .add select { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 7px 9px; min-height: 38px; width: 100%; font-variant-numeric: tabular-nums; }
+.due { font-size: 13px; color: var(--muted); min-width: 0; }
+.due .flag { display: inline-block; background: var(--due-bg); color: var(--due-fg); font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 12.5px; }
+.more { border: 1px solid var(--line); background: transparent; border-radius: 6px; padding: 7px 12px; min-height: 38px; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
+.more[aria-expanded="true"] { background: var(--bg); }
+
+.panel { grid-column: 1 / -1; border-top: 1px dashed var(--line); padding-top: 12px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 24px; }
+.panel h4 { margin: 0 0 4px; font-size: 11px; letter-spacing: 1.2px; color: var(--muted); font-weight: 700; }
+.panel p { margin: 0; font-size: 14px; max-width: 65ch; }
+.panel .stack { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.panel a { color: var(--focus); }
+.panel textarea { min-height: 96px; resize: vertical; }
+.danger { align-self: flex-start; border: 1px solid var(--line); background: transparent; border-radius: 6px; padding: 7px 12px; min-height: 38px; cursor: pointer; font-size: 13px; color: var(--muted); }
+.danger.arm { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+/* Add form */
+.add { margin-block: 28px 40px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.add h2 { margin: 0; font-size: 18px; }
+.add .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 14px; }
+.add .wide { grid-column: span 3; }
+.primary { align-self: flex-start; background: var(--band); color: var(--band-ink); border: 0; border-radius: 6px; padding: 10px 18px; min-height: 44px; font-weight: 600; cursor: pointer; }
+.primary:disabled { opacity: .5; cursor: not-allowed; }
+
+.empty { padding: 36px 16px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; margin-top: 18px; }
+.toast { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--band); color: var(--band-ink); padding: 10px 16px; border-radius: 6px; font-size: 14px; max-width: calc(100% - 32px); }
+.ro { font-size: 13px; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .who, .contact { grid-column: 1 / -1; }
+  .due { grid-column: 1 / 2; }
+  .more { grid-column: 2 / 3; justify-self: end; }
+  .panel { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .tally { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .add .grid { grid-template-columns: minmax(0, 1fr); }
+  .add .wide { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="band">
+  <div class="wrap">
+    <div class="eyebrow">ZIAK UNITED · ไฟล์ติดตามการทักแบรนด์</div>
+    <h1>20 แบรนด์แรก</h1>
+    <p>เปลี่ยนสถานะทุกครั้งที่ส่งหรือได้คำตอบ ระบบนับวันตามให้เอง 6 วันหลังส่ง ร่างข้อความของแต่ละแบรนด์อยู่ใน <a href="https://claude.ai/artifact/7G7kdZczcLxWEvAYQ9fdPx" target="_blank" rel="noopener">คู่มือเตรียมตัวขอสปอนเซอร์</a> แท็บร่างอีเมลรายแบรนด์</p>
+    <div class="tally" aria-live="polite">
+      <div><b id="t-contacted">0/0</b><span>ทักหรือสมัครแล้ว</span></div>
+      <div><b id="t-replied">0</b><span>ตอบกลับหรืออนุมัติ</span></div>
+      <div><b id="t-deal">0</b><span>ได้งาน</span></div>
+      <div class="hot"><b id="t-due">0</b><span>ถึงกำหนดตามวันนี้</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="toolbar" role="group" aria-label="กรองรายการ">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">ทั้งหมด<span class="n" id="n-all"></span></button>
+    <button class="chip" type="button" data-filter="due" aria-pressed="false">ต้องตาม<span class="n" id="n-due"></span></button>
+    <button class="chip" type="button" data-filter="todo" aria-pressed="false">ยังไม่ทัก<span class="n" id="n-todo"></span></button>
+    <button class="chip" type="button" data-filter="waiting" aria-pressed="false">รอตอบ<span class="n" id="n-waiting"></span></button>
+    <button class="chip" type="button" data-filter="answered" aria-pressed="false">มีคำตอบแล้ว<span class="n" id="n-answered"></span></button>
+  </div>
+  <p class="note">การทักแบรนด์เองได้คำตอบเฉลี่ยราว 4% ถ้ารอบแรก 8 รายเงียบก็ยังถือว่าปกติ ตามได้ครั้งเดียวหลัง 5-7 วัน ถ้ายังเงียบอีก 7 วันให้เปลี่ยนเป็น "เงียบ ปล่อยไป" แล้วไปทักรายใหม่</p>
+  <p class="ro" id="ro" hidden>คุณเปิดดูได้อย่างเดียว เฉพาะคนที่มีสิทธิ์แก้ไขเท่านั้นที่เปลี่ยนสถานะได้</p>
+
+  <div id="list">
+    <div class="empty" id="empty">กำลังโหลดรายชื่อแบรนด์ เมื่อโหลดเสร็จ ทั้ง 20 รายจะแสดงแยกตามสัปดาห์</div>
+  </div>
+
+  <form class="add" id="add" hidden>
+    <h2>เพิ่มแบรนด์หรือร้าน</h2>
+    <div class="grid">
+      <label class="field"><span>ชื่อแบรนด์หรือร้าน</span><input type="text" id="f-name" required placeholder="เช่น ร้านเสื้อบอลเรโทร ABC"></label>
+      <label class="field"><span>หมวด</span><input type="text" id="f-cat" placeholder="เช่น เสื้อบอลมือสอง"></label>
+      <label class="field"><span>ช่องทาง</span><input type="text" id="f-channel" placeholder="อีเมล / DM / LINE"></label>
+      <label class="field"><span>ติดต่อที่</span><input type="text" id="f-contact" placeholder="อีเมล เพจ หรือ LINE"></label>
+      <label class="field"><span>สัปดาห์</span>
+        <select id="f-week"><option value="1">สัปดาห์ที่ 1</option><option value="2">สัปดาห์ที่ 2</option><option value="3" selected>สัปดาห์ที่ 3</option><option value="4">รอบถัดไป</option></select>
+      </label>
+      <label class="field"><span>ประเภท</span>
+        <select id="f-kind"><option value="outreach">ทักเอง (อีเมล/DM)</option><option value="platform">สมัครแพลตฟอร์ม</option></select>
+      </label>
+      <label class="field wide"><span>มุมนำเสนอ</span><input type="text" id="f-angle" placeholder="ไอเดียคอนเทนต์ที่เจาะจงกับแบรนด์นี้"></label>
+    </div>
+    <button class="primary" type="submit" id="f-submit">เพิ่มลงรายการ</button>
+  </form>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  const DOC_URL = 'https://claude.ai/artifact/7G7kdZczcLxWEvAYQ9fdPx';
+  const STATUS_ORDER = ['todo', 'sent', 'followed', 'replied', 'deal', 'declined', 'silent'];
+  const LABEL = {
+    outreach: { todo: 'ยังไม่ทัก', sent: 'ส่งแล้ว รอตอบ', followed: 'ตามแล้ว', replied: 'ตอบกลับ กำลังคุย', deal: 'ได้งาน', declined: 'ปฏิเสธ', silent: 'เงียบ ปล่อยไป' },
+    platform: { todo: 'ยังไม่สมัคร', sent: 'สมัครแล้ว รออนุมัติ', followed: 'ตามแล้ว', replied: 'อนุมัติแล้ว', deal: 'ได้งานแรก', declined: 'ไม่ผ่าน', silent: 'เงียบ ปล่อยไป' }
+  };
+  const WEEKS = {
+    1: 'สัปดาห์ที่ 1 · สมัครแพลตฟอร์ม ไม่ต้องรอใครตอบ',
+    2: 'สัปดาห์ที่ 2 · อีเมลรอบแรก 8 แบรนด์',
+    3: 'สัปดาห์ที่ 3 · DM ร้านท้องถิ่นและสาย connection',
+    4: 'รอบถัดไป'
+  };
+  const MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  const COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>';
+
+  let db = null, canEdit = false, brands = [], filter = 'all', pending = false, loaded = false;
+  const open = new Set();
+  const $ = (id) => document.getElementById(id);
+  const list = $('list');
+
+  function today() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function addDays(s, n) {
+    const [y, m, d] = s.split('-').map(Number);
+    return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
+  }
+  function fmt(s) {
+    const [, m, d] = s.split('-').map(Number);
+    return d + ' ' + MONTHS[m - 1];
+  }
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Follow-up rule: one follow-up 6 days after sending; let it go 7 days after the follow-up.
+  function dueInfo(b) {
+    const t = today();
+    if (b.kind === 'platform') {
+      if (b.status === 'sent' && b.sentDate) return { text: 'สมัครเมื่อ ' + fmt(b.sentDate), due: false };
+      return { text: '', due: false };
+    }
+    if (b.status === 'sent' && b.sentDate) {
+      const f = addDays(b.sentDate, 6);
+      return f <= t ? { text: 'ถึงกำหนดตาม', due: true, flag: true } : { text: 'ตาม ' + fmt(f), due: false };
+    }
+    if (b.status === 'followed' && b.followedDate) {
+      const g = addDays(b.followedDate, 7);
+      return g <= t ? { text: 'เงียบเกิน 7 วัน ปล่อยได้', due: false } : { text: 'ตามแล้ว ' + fmt(b.followedDate), due: false };
+    }
+    return { text: '', due: false };
+  }
+  function bucket(b) {
+    if (b.status === 'todo') return 'todo';
+    if (b.status === 'sent' || b.status === 'followed') return 'waiting';
+    return 'answered';
+  }
+  function matches(b) {
+    if (filter === 'all') return true;
+    if (filter === 'due') return dueInfo(b).due;
+    return bucket(b) === filter;
+  }
+
+  function renderTally() {
+    const total = brands.length;
+    const contacted = brands.filter((b) => b.status !== 'todo').length;
+    const replied = brands.filter((b) => ['replied', 'deal'].includes(b.status)).length;
+    const deal = brands.filter((b) => b.status === 'deal').length;
+    const due = brands.filter((b) => dueInfo(b).due).length;
+    $('t-contacted').textContent = contacted + '/' + total;
+    $('t-replied').textContent = replied;
+    $('t-deal').textContent = deal;
+    $('t-due').textContent = due;
+    $('n-all').textContent = total;
+    $('n-due').textContent = due;
+    $('n-todo').textContent = brands.filter((b) => bucket(b) === 'todo').length;
+    $('n-waiting').textContent = brands.filter((b) => bucket(b) === 'waiting').length;
+    $('n-answered').textContent = brands.filter((b) => bucket(b) === 'answered').length;
+  }
+
+  function rowHTML(b) {
+    const kind = b.kind === 'platform' ? 'platform' : 'outreach';
+    const info = dueInfo(b);
+    const dis = canEdit ? '' : ' disabled';
+    const opts = STATUS_ORDER.map((s) => '<option value="' + s + '"' + (s === b.status ? ' selected' : '') + '>' + LABEL[kind][s] + '</option>').join('');
+    const isOpen = open.has(b.id);
+    const draft = b.draft ? '<p><a href="' + DOC_URL + '" target="_blank" rel="noopener">เปิดร่างข้อความฉบับที่ ' + esc(b.draft) + '</a> ในแท็บร่างอีเมลรายแบรนด์</p>' : '';
+    return '<article class="row' + (info.due ? ' is-due' : '') + '" data-id="' + esc(b.id) + '">' +
+      '<div class="who"><span class="num">' + esc(b.order) + '</span><div><h3>' + esc(b.name) + '</h3><p>' + esc([b.category, b.channel].filter(Boolean).join(' · ')) + '</p></div></div>' +
+      '<div class="contact">' + (b.contact ? '<code>' + esc(b.contact) + '</code><button class="icon-btn" type="button" data-copy aria-label="คัดลอกช่องทางติดต่อของ ' + esc(b.name) + '">' + COPY_SVG + '</button>' : '<span class="ro">ยังไม่มีช่องทาง</span>') + '</div>' +
+      '<label class="field"><span>สถานะ</span><select class="status st-' + esc(b.status) + '" id="st-' + esc(b.id) + '" data-field="status"' + dis + '>' + opts + '</select></label>' +
+      '<label class="field"><span>' + (kind === 'platform' ? 'วันที่สมัคร' : 'วันที่ส่ง') + '</span><input type="date" id="sd-' + esc(b.id) + '" data-field="sentDate" value="' + esc(b.sentDate || '') + '"' + dis + '></label>' +
+      '<div class="due">' + (info.flag ? '<span class="flag">' + info.text + '</span>' : esc(info.text)) + '</div>' +
+      '<button class="more" type="button" data-toggle aria-expanded="' + isOpen + '" aria-controls="p-' + esc(b.id) + '">รายละเอียด</button>' +
+      '<div class="panel" id="p-' + esc(b.id) + '"' + (isOpen ? '' : ' hidden') + '>' +
+        '<div class="stack">' +
+          '<div><h4>มุมนำเสนอ</h4><p>' + esc(b.angle || 'ยังไม่ได้ใส่') + '</p></div>' +
+          (b.alt ? '<div><h4>ช่องทางเพิ่มเติม</h4><p>' + esc(b.alt) + '</p></div>' : '') +
+          (b.tip ? '<div><h4>ข้อควรรู้</h4><p>' + esc(b.tip) + '</p></div>' : '') +
+          draft +
+        '</div>' +
+        '<div class="stack">' +
+          '<label class="field"><span>ผู้รับและผลลัพธ์</span><textarea id="nt-' + esc(b.id) + '" data-field="notes" placeholder="ชื่อคนที่ตอบ งบ brief หรือเหตุผลที่ปฏิเสธ"' + dis + '>' + esc(b.notes || '') + '</textarea></label>' +
+          (canEdit ? '<button class="danger" type="button" data-delete>ลบรายการนี้</button>' : '') +
+        '</div>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function render() {
+    renderTally();
+    if (!loaded) return;
+    const shown = brands.filter(matches);
+    if (!brands.length) {
+      list.innerHTML = '<div class="empty">ยังไม่มีรายชื่อ เพิ่มแบรนด์แรกจากฟอร์มด้านล่าง</div>';
+      return;
+    }
+    if (!shown.length) {
+      list.innerHTML = '<div class="empty">ไม่มีรายการในตัวกรองนี้</div>';
+      return;
+    }
+    const weeks = [...new Set(shown.map((b) => b.week || 4))].sort((a, b) => a - b);
+    const activeId = list.contains(document.activeElement) ? document.activeElement.id : '';
+    list.innerHTML = weeks.map((w) => {
+      const rows = shown.filter((b) => (b.week || 4) === w);
+      const all = brands.filter((b) => (b.week || 4) === w);
+      const done = all.filter((b) => b.status !== 'todo').length;
+      return '<section class="week"><div class="week-head"><h2>' + esc(WEEKS[w] || WEEKS[4]) + '</h2><span>ทำแล้ว ' + done + ' จาก ' + all.length + '</span></div>' + rows.map(rowHTML).join('') + '</section>';
+    }).join('');
+    if (activeId && $(activeId)) $(activeId).focus();
+  }
+
+  function safeRender() {
+    const a = document.activeElement;
+    if (a && list.contains(a) && (a.tagName === 'TEXTAREA' || a.type === 'date')) { pending = true; return; }
+    render();
+  }
+  list.addEventListener('focusout', () => { if (pending) { pending = false; setTimeout(safeRender, 0); } });
+
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+  }
+
+  async function save(id, patch) {
+    if (!db || !canEdit) return;
+    const local = brands.find((b) => b.id === id);
+    if (local) Object.assign(local, patch);
+    safeRender();
+    try { await db.doc('brands/' + id).update(Object.assign({ updatedAt: new Date().toISOString() }, patch)); }
+    catch (e) { toast('บันทึกไม่สำเร็จ ลองอีกครั้ง'); }
+  }
+
+  list.addEventListener('change', (e) => {
+    const el = e.target, row = el.closest('.row');
+    if (!row || !el.dataset.field) return;
+    const id = row.dataset.id, b = brands.find((x) => x.id === id);
+    if (!b) return;
+    const f = el.dataset.field;
+    if (f === 'status') {
+      const patch = { status: el.value };
+      if (el.value === 'sent' && !b.sentDate) patch.sentDate = today();
+      if (el.value === 'followed' && !b.followedDate) patch.followedDate = today();
+      save(id, patch);
+      toast('บันทึกสถานะ ' + b.name + ' แล้ว');
+    } else if (f === 'sentDate') {
+      save(id, { sentDate: el.value });
+    } else if (f === 'notes') {
+      save(id, { notes: el.value });
+      toast('บันทึกโน้ตแล้ว');
+    }
+  });
+
+  list.addEventListener('click', async (e) => {
+    const row = e.target.closest('.row');
+    if (!row) return;
+    const id = row.dataset.id, b = brands.find((x) => x.id === id);
+    const tog = e.target.closest('[data-toggle]');
+    if (tog) {
+      const p = $('p-' + id), willOpen = p.hidden;
+      p.hidden = !willOpen; tog.setAttribute('aria-expanded', String(willOpen));
+      willOpen ? open.add(id) : open.delete(id);
+      return;
+    }
+    const cp = e.target.closest('[data-copy]');
+    if (cp && b) {
+      try { await navigator.clipboard.writeText(b.contact); toast('คัดลอก ' + b.contact + ' แล้ว'); }
+      catch (err) {
+        const code = row.querySelector('.contact code');
+        const r = document.createRange(); r.selectNodeContents(code);
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        toast('เลือกข้อความไว้แล้ว กดคัดลอกเองได้เลย');
+      }
+      return;
+    }
+    const del = e.target.closest('[data-delete]');
+    if (del && b && db && canEdit) {
+      if (!del.classList.contains('arm')) {
+        del.classList.add('arm'); del.textContent = 'กดอีกครั้งเพื่อยืนยันลบ ' + b.name;
+        setTimeout(() => { if (del.isConnected) { del.classList.remove('arm'); del.textContent = 'ลบรายการนี้'; } }, 4000);
+        return;
+      }
+      try { await db.doc('brands/' + id).delete(); open.delete(id); toast('ลบ ' + b.name + ' แล้ว'); }
+      catch (err) { toast('ลบไม่สำเร็จ ลองอีกครั้ง'); }
+    }
+  });
+
+  document.querySelector('.toolbar').addEventListener('click', (e) => {
+    const c = e.target.closest('[data-filter]');
+    if (!c) return;
+    filter = c.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+    render();
+  });
+
+  $('add').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!db || !canEdit) return;
+    const name = $('f-name').value.trim();
+    if (!name) { $('f-name').focus(); return; }
+    const id = 'b' + Date.now().toString(36);
+    const order = brands.reduce((m, b) => Math.max(m, Number(b.order) || 0), 0) + 1;
+    const doc = {
+      order, name,
+      category: $('f-cat').value.trim(),
+      channel: $('f-channel').value.trim(),
+      contact: $('f-contact').value.trim(),
+      week: Number($('f-week').value),
+      kind: $('f-kind').value,
+      angle: $('f-angle').value.trim(),
+      status: 'todo', sentDate: '', notes: '',
+      updatedAt: new Date().toISOString()
+    };
+    $('f-submit').disabled = true;
+    try {
+      await db.doc('brands/' + id).set(doc);
+      $('add').reset(); $('f-week').value = '3';
+      toast('เพิ่ม ' + name + ' แล้ว');
+    } catch (err) {
+      toast(err && err.code === 'quota_exceeded' ? 'รายการเต็มแล้ว ลบรายการเก่าก่อน' : 'เพิ่มไม่สำเร็จ ลองอีกครั้ง');
+    } finally { $('f-submit').disabled = false; }
+  });
+
+  async function boot() {
+    if (!window.claude || !window.claude.use) {
+      $('empty').textContent = 'เปิดหน้านี้ใน claude.ai เพื่อดูและอัปเดตรายชื่อแบรนด์';
+      return;
+    }
+    const [d, u] = await Promise.all([claude.use('db'), claude.use('user')]);
+    db = d;
+    canEdit = u ? await u.canEdit() : false;
+    if (!db) {
+      $('empty').textContent = 'โหลดรายชื่อไม่ได้ในมุมมองนี้ ลองเปิดหน้านี้ใหม่ใน claude.ai';
+      return;
+    }
+    $('ro').hidden = canEdit;
+    $('add').hidden = !canEdit;
+    db.collection('brands').orderBy('order').onSnapshot((snap) => {
+      loaded = true;
+      brands = snap.docs.map((s) => Object.assign({ id: s.id }, s.data()));
+      safeRender();
+    }, () => {
+      $('empty').textContent = 'การเชื่อมต่อขาดหาย รีเฟรชหน้านี้เพื่อโหลดใหม่';
+    });
+    setInterval(() => { if (loaded) safeRender(); }, 60 * 60 * 1000);
+  }
+  boot();
+})();
+</script>
