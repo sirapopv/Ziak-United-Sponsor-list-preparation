@@ -117,6 +117,15 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
 .panel .stack { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .panel a { color: var(--focus); }
 .panel textarea { min-height: 96px; resize: vertical; }
+.msg { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.msg-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.msg-head h4 { margin: 0; }
+.msg pre { margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; font-family: var(--font); font-size: 13.5px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; }
+.copy-btn { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 5px 12px; min-height: 34px; cursor: pointer; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.copy-btn:hover { border-color: var(--muted); }
+.panel .full { grid-column: 1 / -1; }
+.plan { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
+.plan b { font-weight: 600; }
 .danger { align-self: flex-start; border: 1px solid var(--line); background: transparent; border-radius: 6px; padding: 7px 12px; min-height: 38px; cursor: pointer; font-size: 13px; color: var(--muted); }
 .danger.arm { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
@@ -151,12 +160,12 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
   <div class="wrap">
     <div class="eyebrow">ZIAK UNITED · ไฟล์ติดตามการทักแบรนด์</div>
     <h1>20 แบรนด์แรก</h1>
-    <p>เปลี่ยนสถานะทุกครั้งที่ส่งหรือได้คำตอบ ระบบนับวันตามให้เอง 6 วันหลังส่ง ร่างข้อความของแต่ละแบรนด์อยู่ใน <a href="https://claude.ai/artifact/7G7kdZczcLxWEvAYQ9fdPx" target="_blank" rel="noopener">คู่มือเตรียมตัวขอสปอนเซอร์</a> แท็บร่างอีเมลรายแบรนด์</p>
+    <p>กด "รายละเอียด" เพื่อดูวันส่งและคัดลอกข้อความพร้อมส่ง ส่งแล้วให้เปลี่ยนสถานะทันที ระบบจะนับวันตามให้ 7 วันหลังส่ง ฉบับเต็มอยู่ใน <a href="https://claude.ai/artifact/7G7kdZczcLxWEvAYQ9fdPx" target="_blank" rel="noopener">คู่มือเตรียมตัวขอสปอนเซอร์</a> แท็บข้อความพร้อมส่ง</p>
     <div class="tally" aria-live="polite">
       <div><b id="t-contacted">0/0</b><span>ทักหรือสมัครแล้ว</span></div>
       <div><b id="t-replied">0</b><span>ตอบกลับหรืออนุมัติ</span></div>
       <div><b id="t-deal">0</b><span>ได้งาน</span></div>
-      <div class="hot"><b id="t-due">0</b><span>ถึงกำหนดตามวันนี้</span></div>
+      <div class="hot"><b id="t-due">0</b><span>ต้องส่งหรือตามวันนี้</span></div>
     </div>
   </div>
 </header>
@@ -164,12 +173,12 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
 <main class="wrap">
   <div class="toolbar" role="group" aria-label="กรองรายการ">
     <button class="chip" type="button" data-filter="all" aria-pressed="true">ทั้งหมด<span class="n" id="n-all"></span></button>
-    <button class="chip" type="button" data-filter="due" aria-pressed="false">ต้องตาม<span class="n" id="n-due"></span></button>
+    <button class="chip" type="button" data-filter="due" aria-pressed="false">ต้องทำวันนี้<span class="n" id="n-due"></span></button>
     <button class="chip" type="button" data-filter="todo" aria-pressed="false">ยังไม่ทัก<span class="n" id="n-todo"></span></button>
     <button class="chip" type="button" data-filter="waiting" aria-pressed="false">รอตอบ<span class="n" id="n-waiting"></span></button>
     <button class="chip" type="button" data-filter="answered" aria-pressed="false">มีคำตอบแล้ว<span class="n" id="n-answered"></span></button>
   </div>
-  <p class="note">การทักแบรนด์เองได้คำตอบเฉลี่ยราว 4% ถ้ารอบแรก 8 รายเงียบก็ยังถือว่าปกติ ตามได้ครั้งเดียวหลัง 5-7 วัน ถ้ายังเงียบอีก 7 วันให้เปลี่ยนเป็น "เงียบ ปล่อยไป" แล้วไปทักรายใหม่</p>
+  <p class="note">การทักแบรนด์เองได้คำตอบเฉลี่ยราว 4% ถ้ารอบแรก 8 รายเงียบก็ยังถือว่าปกติ ตามครั้งเดียวหลังส่ง 7 วัน ถ้ายังเงียบอีก 7 วันให้เปลี่ยนเป็น "เงียบ ปล่อยไป" แล้วไปทักรายใหม่</p>
   <p class="ro" id="ro" hidden>คุณเปิดดูได้อย่างเดียว เฉพาะคนที่มีสิทธิ์แก้ไขเท่านั้นที่เปลี่ยนสถานะได้</p>
 
   <div id="list">
@@ -198,7 +207,6 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
 
 <script>
 (function () {
-  const DOC_URL = 'https://claude.ai/artifact/7G7kdZczcLxWEvAYQ9fdPx';
   const STATUS_ORDER = ['todo', 'sent', 'followed', 'replied', 'deal', 'declined', 'silent'];
   const LABEL = {
     outreach: { todo: 'ยังไม่ทัก', sent: 'ส่งแล้ว รอตอบ', followed: 'ตามแล้ว', replied: 'ตอบกลับ กำลังคุย', deal: 'ได้งาน', declined: 'ปฏิเสธ', silent: 'เงียบ ปล่อยไป' },
@@ -234,15 +242,19 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
     return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  // Follow-up rule: one follow-up 6 days after sending; let it go 7 days after the follow-up.
+  // Follow-up rule: one follow-up 7 days after sending; let it go 7 days after the follow-up.
   function dueInfo(b) {
     const t = today();
     if (b.kind === 'platform') {
+      if (b.status === 'todo' && b.sendOn) return b.sendOn <= t ? { text: 'ถึงวันสมัคร', due: true, flag: true } : { text: 'สมัคร ' + fmt(b.sendOn), due: false };
       if (b.status === 'sent' && b.sentDate) return { text: 'สมัครเมื่อ ' + fmt(b.sentDate), due: false };
       return { text: '', due: false };
     }
+    if (b.status === 'todo' && b.sendOn) {
+      return b.sendOn <= t ? { text: 'ถึงวันส่ง', due: true, flag: true } : { text: 'ส่ง ' + fmt(b.sendOn), due: false };
+    }
     if (b.status === 'sent' && b.sentDate) {
-      const f = addDays(b.sentDate, 6);
+      const f = addDays(b.sentDate, 7);
       return f <= t ? { text: 'ถึงกำหนดตาม', due: true, flag: true } : { text: 'ตาม ' + fmt(f), due: false };
     }
     if (b.status === 'followed' && b.followedDate) {
@@ -279,13 +291,26 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
     $('n-answered').textContent = brands.filter((b) => bucket(b) === 'answered').length;
   }
 
+  function planHTML(b) {
+    if (!b.sendAt && !b.sendVia && !b.how) return '';
+    return '<div class="full stack">' +
+      '<div class="plan">' + (b.sendAt ? '<span><b>ส่งเมื่อ</b> ' + esc(b.sendAt) + '</span>' : '') + (b.sendVia ? '<span><b>ทาง</b> ' + esc(b.sendVia) + '</span>' : '') + '</div>' +
+      (b.how ? '<p><b>วิธีทำ</b> ' + esc(b.how) + '</p>' : '') +
+    '</div>';
+  }
+  function msgHTML(b, field, label, wide) {
+    if (!b[field]) return '';
+    return '<div class="msg' + (wide || field === 'followup' ? ' full' : '') + '"><div class="msg-head"><h4>' + esc(label) + '</h4>' +
+      '<button class="copy-btn" type="button" data-copy-field="' + field + '" aria-label="คัดลอก' + esc(label) + ' ของ ' + esc(b.name) + '">คัดลอก</button></div>' +
+      '<pre id="m-' + field + '-' + esc(b.id) + '">' + esc(b[field]) + '</pre></div>';
+  }
+
   function rowHTML(b) {
     const kind = b.kind === 'platform' ? 'platform' : 'outreach';
     const info = dueInfo(b);
     const dis = canEdit ? '' : ' disabled';
     const opts = STATUS_ORDER.map((s) => '<option value="' + s + '"' + (s === b.status ? ' selected' : '') + '>' + LABEL[kind][s] + '</option>').join('');
     const isOpen = open.has(b.id);
-    const draft = b.draft ? '<p><a href="' + DOC_URL + '" target="_blank" rel="noopener">เปิดร่างข้อความฉบับที่ ' + esc(b.draft) + '</a> ในแท็บร่างอีเมลรายแบรนด์</p>' : '';
     return '<article class="row' + (info.due ? ' is-due' : '') + '" data-id="' + esc(b.id) + '">' +
       '<div class="who"><span class="num">' + esc(b.order) + '</span><div><h3>' + esc(b.name) + '</h3><p>' + esc([b.category, b.channel].filter(Boolean).join(' · ')) + '</p></div></div>' +
       '<div class="contact">' + (b.contact ? '<code>' + esc(b.contact) + '</code><button class="icon-btn" type="button" data-copy aria-label="คัดลอกช่องทางติดต่อของ ' + esc(b.name) + '">' + COPY_SVG + '</button>' : '<span class="ro">ยังไม่มีช่องทาง</span>') + '</div>' +
@@ -294,16 +319,20 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
       '<div class="due">' + (info.flag ? '<span class="flag">' + info.text + '</span>' : esc(info.text)) + '</div>' +
       '<button class="more" type="button" data-toggle aria-expanded="' + isOpen + '" aria-controls="p-' + esc(b.id) + '">รายละเอียด</button>' +
       '<div class="panel" id="p-' + esc(b.id) + '"' + (isOpen ? '' : ' hidden') + '>' +
+        planHTML(b) +
         '<div class="stack">' +
           '<div><h4>มุมนำเสนอ</h4><p>' + esc(b.angle || 'ยังไม่ได้ใส่') + '</p></div>' +
           (b.alt ? '<div><h4>ช่องทางเพิ่มเติม</h4><p>' + esc(b.alt) + '</p></div>' : '') +
           (b.tip ? '<div><h4>ข้อควรรู้</h4><p>' + esc(b.tip) + '</p></div>' : '') +
-          draft +
         '</div>' +
         '<div class="stack">' +
           '<label class="field"><span>ผู้รับและผลลัพธ์</span><textarea id="nt-' + esc(b.id) + '" data-field="notes" placeholder="ชื่อคนที่ตอบ งบ brief หรือเหตุผลที่ปฏิเสธ"' + dis + '>' + esc(b.notes || '') + '</textarea></label>' +
           (canEdit ? '<button class="danger" type="button" data-delete>ลบรายการนี้</button>' : '') +
         '</div>' +
+        msgHTML(b, 'subject', 'หัวข้ออีเมล') +
+        msgHTML(b, 'message', b.msgLabel || 'ข้อความหลัก', true) +
+        msgHTML(b, 'dm', b.dmLabel || 'ข้อความสั้นทาง LINE หรือ DM') +
+        msgHTML(b, 'followup', 'Follow-up' + (b.followOn ? ' ส่ง ' + fmt(b.followOn) : '')) +
       '</div>' +
     '</article>';
   }
@@ -384,6 +413,18 @@ input[type="date"], input[type="text"], textarea, .add select { border: 1px soli
       const p = $('p-' + id), willOpen = p.hidden;
       p.hidden = !willOpen; tog.setAttribute('aria-expanded', String(willOpen));
       willOpen ? open.add(id) : open.delete(id);
+      return;
+    }
+    const cf = e.target.closest('[data-copy-field]');
+    if (cf && b) {
+      const f = cf.dataset.copyField;
+      try { await navigator.clipboard.writeText(b[f]); toast('คัดลอกแล้ว วางส่งได้เลย'); }
+      catch (err) {
+        const pre = $('m-' + f + '-' + id);
+        const r = document.createRange(); r.selectNodeContents(pre);
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        toast('เลือกข้อความไว้แล้ว กดคัดลอกเองได้เลย');
+      }
       return;
     }
     const cp = e.target.closest('[data-copy]');
